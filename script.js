@@ -1,5 +1,3 @@
-//var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 
 window.onload = function () {
@@ -249,7 +247,7 @@ playState.create = function() {
 
     //score
 
-    scoreText = game.add.text(16, 16, 'score:' +score, { fontSize: '16px', fill: '#000' });
+    scoreText = game.add.text(16, 16, 'Score:' +score, { fontSize: '16px', fill: '#000' });
 
     scoreText.fixedToCamera = true;
 
@@ -269,7 +267,7 @@ playState.create = function() {
 
     water.enableBody = true;
 
-    var water1=water.create(800,game.world.height-30,'voda');  //samo djeca u grupi mogu imati body.immovable=true!!
+    var water1=water.create(800,game.world.height-30,'voda');  
 
     water1.body.immovable = true;
 
@@ -325,6 +323,8 @@ playState.create = function() {
     enemies.create(230,370,'invader');
 
     enemies.create(430,120,'invader');
+
+
 
 
 
@@ -427,7 +427,7 @@ playState.update = function() {
 
     //updates controlls,camera and animations
 
-    player.body.velocity.x = 0;
+    player.body.velocity.x = 1;
 
     if (cursors.left.isDown)
     {
@@ -456,7 +456,9 @@ playState.update = function() {
 
          player.animations.stop();
 
-         player.frame = 0; 
+         player.frame = 0;
+
+
 
     }
 
@@ -478,6 +480,10 @@ playState.update = function() {
 
 
           if(reset.isDown){
+
+            score = 0;
+
+            scoreText.text = 'Score: ' + score;
 
             game.state.restart();
 
@@ -569,20 +575,23 @@ function enemiesInteraction(player,enemies){
 
     crush.play();
 
-    if(player.body.touching.left === true || player.body.touching.right === true){
+    if(player.body.touching.left || player.body.touching.right){
 
         player.kill();
 
     }
-    else if(player.body.touching.bottom === true){
+    else if(player.body.touching.down){
 
         score += 200;
 
         scoreText.text = 'Score: ' + score;
 
+        enemies.kill();
+
     }
 
 }
+
 
 function enterDoors(player,door){
 
@@ -622,9 +631,14 @@ endState.update = function(){
 
     if(restart.isDown){
 
+            score = 0;
+
+            scoreText.text = 'Score: ' + score;
+
             victory.stop();
 
             game.state.start('menu');
+
 
         }
 }
